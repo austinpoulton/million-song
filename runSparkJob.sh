@@ -1,10 +1,14 @@
-if ["$#" -lt 3]
+#!/bin/bash
+if [ $# -lt 3 ]
 then
-    echo "Usage: spark-submit --class <full qualified driver class" --master yarn target/<spark-dist.jar> <hdfs source folder>"
+    cat <<!
+Usage: spark-submit --class <full qualified driver class" --master yarn target/<spark-dist.jar> <hdfs source folder>
+e.g.
+
+spark-submit --class jiba.msd.analysis.BasicAnalysis --master yarn target/scala-2.10/million-song-analysis_2.10-1.0.jar /data/millionsong
+
+!
 else
    echo "Starting job"
    spark-submit --class $1 --master yarn target/$2 $3
 fi
-
-
-# spark-submit --class bdp.spark.wordcount.SparkWordCount --master yarn target/wordcount-0.0.1-SNAPSHOT.jar /data/gutenberg
