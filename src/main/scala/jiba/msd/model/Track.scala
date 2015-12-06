@@ -136,7 +136,8 @@ object Track {
 
   def processTrackLine(t: String) : Track =
   {
-    val components = t.split(",")
+    // val components = t.split(",")
+    val components = t.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1)
     val cleaned = components.map(s => s.replaceAll("\"",""))
     Track(cleaned)
   }
