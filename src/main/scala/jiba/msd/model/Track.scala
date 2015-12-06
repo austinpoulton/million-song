@@ -47,40 +47,40 @@ package jiba.msd.model
  * @param track7Id
  * @param year
  */
-class Track (sampleRate : Double,
-             artist7Id  : Int,
-             artistFamiliarity : Double,
-             artistHotness : Double,
-             artistId : String,
-             artistLong : Double,
-             artistLocation : String,
-             artistLat : Double,
-             artistMbid : String,
-             artistName : String,
-             artistPlaymeId : Int,
-             audioMd5 : String,
-             danceability : Double,
-             duration : Double,
-             endOfFadeIn : Double,
-             energy : Double,
-             key : Int,
-             keyConfidence : Double,
-             loudness : Double,
-             mode : Int,
-             modeConfidence : Double,
-             unknown : String,
-             release : String,
-             release7Id : Int,
-             songHotness : Double,
-             songId : String,
-             startOfFadeOut : Double,
-             tempo : Int,
-             timeSignature : Int,
-             timeSignatureConfidence : Double,
-             title : String,
-             trackId : String,
-             track7Id : Int,
-             year : Int
+class Track (val sampleRate : Double,
+             val artist7Id  : Int,
+             val artistFamiliarity : Double,
+             val artistHotness : Double,
+             val artistId : String,
+             val artistLong : Double,
+             val artistLocation : String,
+             val artistLat : Double,
+             val artistMbid : String,
+             val artistName : String,
+             val artistPlaymeId : Int,
+             val audioMd5 : String,
+             val danceability : Double,
+             val duration : Double,
+             val endOfFadeIn : Double,
+             val energy : Double,
+             val key : Int,
+             val keyConfidence : Double,
+             val loudness : Double,
+             val mode : Int,
+             val modeConfidence : Double,
+             val unknown : String,
+             val release : String,
+             val release7Id : Int,
+             val songHotness : Double,
+             val songId : String,
+             val startOfFadeOut : Double,
+             val tempo : Int,
+             val timeSignature : Int,
+             val timeSignatureConfidence : Double,
+             val title : String,
+             val trackId : String,
+             val track7Id : Int,
+             val year : Int
               )
 {
 
@@ -94,46 +94,50 @@ object Track {
     * @param t Array of strings representing the track meta data attributes
    * @return A instance of Track
    */
-  def apply(t :Array[String]):Track =
-  {
-    if (t.length != 34) throw new IllegalArgumentException("t corrupted: "+ t.length)
+  def apply(t :Array[String]):Track = {
+    if (t.length != 34) throw new IllegalArgumentException("t corrupted: " + t.length)
     val track = new Track(t(0).toDouble,
-                          t(1).toInt,
-                          t(2).toDouble,
-                          t(3).toDouble,
-                          t(4),
-                          t(5).toDouble,
-                          t(6),
-                          t(7).toDouble,
-                          t(8),
-                          t(9),
-                          t(10).toInt,
-                          t(11),
-                          t(12).toDouble,
-                          t(13).toDouble,
-                          t(14).toDouble,
-                          t(15).toDouble,
-                          t(16).toInt,
-                          t(17).toDouble,
-                          t(18).toDouble,
-                          t(19).toInt,
-                          t(20).toDouble,
-                          t(21),
-                          t(22),
-                          t(23).toInt,
-                          t(24).toDouble,
-                          t(25),
-                          t(26).toDouble,
-                          t(27).toInt,
-                          t(28).toInt,
-                          t(29).toDouble,
-                          t(30),
-                          t(31),
-                          t(32).toInt,
-                          t(33).toInt
-                          )
-     track  // return track
+      t(1).toInt,
+      t(2).toDouble,
+      t(3).toDouble,
+      t(4),
+      t(5).toDouble,
+      t(6),
+      t(7).toDouble,
+      t(8),
+      t(9),
+      t(10).toInt,
+      t(11),
+      t(12).toDouble,
+      t(13).toDouble,
+      t(14).toDouble,
+      t(15).toDouble,
+      t(16).toInt,
+      t(17).toDouble,
+      t(18).toDouble,
+      t(19).toInt,
+      t(20).toDouble,
+      t(21),
+      t(22),
+      t(23).toInt,
+      t(24).toDouble,
+      t(25),
+      t(26).toDouble,
+      t(27).toInt,
+      t(28).toInt,
+      t(29).toDouble,
+      t(30),
+      t(31),
+      t(32).toInt,
+      t(33).toInt
+    )
+    track // return track
   }
 
-
+  def processTrackLine(t: String) : Track =
+  {
+    val components = t.split(",")
+    val cleaned = components.map(s => s.replaceAll("\"",""))
+    Track(cleaned)
+  }
 }

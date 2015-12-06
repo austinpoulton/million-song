@@ -26,3 +26,5 @@ lib_managed
 # Mac
 .DS_Store
 
+# all ms temp crap
+~$*

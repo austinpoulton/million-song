@@ -2,7 +2,8 @@ package jiba.msd.analysis
 
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
-import org.apache.spark.SparkConf
+import org.apache.spark._
+import org.apache.spark.rdd.RDD._
 
 
 /**
@@ -12,22 +13,24 @@ import org.apache.spark.SparkConf
 
 
 
-object BasicAnalysis extends App {
+object BasicAnalysis {
 
-  val sc = new SparkContext(new SparkConf().setAppName("Spark Word Count"))
+  val fileNames : Array[String] =  Array("A.csv", "B.csv", "C.csv"  )
+  //val fileSizes : Map[String,Long]
 
-  val lines = sc.textFile("hdfs://moonshot-ha-nameservice" + args(0))
+  def main(args: Array[String]): Unit = {
 
-  //transformations from the original input data
-  val words = lines.flatMap(line => line.split("[ .,;:()]+"))
-  val pairs = words.map(word => (word,1))
-  val counts = pairs.reduceByKey((a,b)=>a+b)
+    val sc = new SparkContext(new SparkConf().setAppName("Spark Word Count"))
 
-  //collect() is an action, so this value is retrieved to the driver
-  val winter = counts.filter(pair=>pair._1.equals("winter")).collect()
+    val lines = sc.textFile("hdfs://moonshot-ha-nameservice" + args(0))
+    val words = lines.flatMap(line => line.split("[ .,;:()]+"))
+    val pairs = words.map(word => (word,1))
+    val counts = pairs.reduceByKey((a,b)=>a+b)
 
-  winter.foreach(println)
+    //collect() is an action, so this value is retrieved to the driver
+    val winter = counts.filter(pair=>pair._1.equals("winter")).collect()
 
+    winter.foreach(println)
 
-
+  }
 }
