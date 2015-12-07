@@ -22,10 +22,13 @@ object SongCount {
     val username = System.getProperties().get("user.name")
     val outdir = moon + "/user/" + username + "/msd"
 
-    val lines = sc.textFile(moon + "/data/millionsong/A.csv")
+    // val lines = sc.textFile(moon + "/data/millionsong/A.csv")
+    val lines = sc.textFile(moon + args(0))
     val tracks  = lines.map(line => Track.createTrack(line))
-    val artistSongCounts = tracks.filter(to => to.get != None).map(t => (t.get.artistName, 1)).reduceByKey((v1, v2) => v1 + v2)
+    val artistSongCounts = tracks.filter(to => to != None).map(t => (t.get.artistName, 1)).reduceByKey((v1, v2) => v1 + v2)
 
+ 
+    
     //
     // Zap the output directory first if it exists
     //
