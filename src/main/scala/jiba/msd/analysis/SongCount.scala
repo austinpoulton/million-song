@@ -3,7 +3,7 @@ package jiba.msd.analysis
 import jiba.msd.model.Track
 import org.apache.spark._
 import org.apache.spark.SparkContext._
-// import org.apache.spark.rdd.RDD._
+//import org.apache.spark.rdd.RDD._
 
 
 /**
@@ -23,8 +23,8 @@ object SongCount {
     val outdir = moon + "/user/" + username + "/msd"
 
     val lines = sc.textFile(moon + "/data/millionsong/A.csv")
-    val tracks  = lines.map(line => Track.processTrackLine(line))
-    val artistSongCounts = tracks.map(t => (t.artistName, 1)).reduceByKey((v1, v2) => v1 + v2)
+    val tracks  = lines.map(line => Track.createTrack(line))
+    val artistSongCounts = tracks.filter(to => to.get != None).map(t => (t.get.artistName, 1)).reduceByKey((v1, v2) => v1 + v2)
 
     //
     // Zap the output directory first if it exists

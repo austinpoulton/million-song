@@ -1,11 +1,9 @@
 package jiba.msd.model
 
 /**
- * Created by austin on 30/11/2015.
- *
+ * Created by austin on 30/11/2015
  * Case class and companion object that represents track data from the
  * million song database
- *
  */
 
 
@@ -47,8 +45,8 @@ package jiba.msd.model
  * @param track7Id
  * @param year
  */
-class Track (val sampleRate : Double,
-             val artist7Id  : Int,
+class Track (val sampleRate : Int,
+             val artist7Id  :  Int,
              val artistFamiliarity : Double,
              val artistHotness : Double,
              val artistId : String,
@@ -80,65 +78,101 @@ class Track (val sampleRate : Double,
              val title : String,
              val trackId : String,
              val track7Id : Int,
-             val year : Int
-              )
+             val year : Int)
 {
 
-  override def toString():String = ???
-
+  override def toString():String =
+    "Artist:\t"+this.artistName+"\nSongTitle:\t"+this.title
 }
 
 
 object Track {
+
   /**
-    * @param t Array of strings representing the track meta data attributes
-   * @return A instance of Track
+   *
+   * @param t Array of strings representing the track meta data attributes
+   * @throws java.lang.IllegalArgumentException - compatibility with Java
+   * @throws java.lang.NumberFormatException
+   * @return  A instance of Track
    */
-  def apply(t :Array[String]):Track = {
-    if (t.length != 34) throw new IllegalArgumentException("t corrupted: " + t.length)
-    val track = new Track(t(0).toDouble,
-      t(1).toInt,
-      t(2).toDouble,
-      t(3).toDouble,
-      t(4),
-      t(5).toDouble,
-      t(6),
-      t(7).toDouble,
-      t(8),
-      t(9),
-      t(10).toInt,
-      t(11),
-      t(12).toDouble,
-      t(13).toDouble,
-      t(14).toDouble,
-      t(15).toDouble,
-      t(16).toInt,
-      t(17).toDouble,
-      t(18).toDouble,
-      t(19).toInt,
-      t(20).toDouble,
-      t(21),
-      t(22),
-      t(23).toInt,
-      t(24).toDouble,
-      t(25),
-      t(26).toDouble,
-      t(27).toInt,
-      t(28).toInt,
-      t(29).toDouble,
-      t(30),
-      t(31),
-      t(32).toInt,
-      t(33).toInt
-    )
-    track // return track
+  @throws(classOf[IllegalArgumentException])
+  @throws(classOf[NumberFormatException])
+  def apply(t :Array[String]):Option[Track] = {
+    if (t.length != 34) None // throw new IllegalArgumentException("t corrupted: " + t.length)
+    else {
+      val track = new Track(
+        toInt(t(0)).getOrElse(0),
+        toInt(t(1)).getOrElse(0),
+        toDouble(t(2)) getOrElse (0.0),
+        toDouble(t(3)).getOrElse(0.0),
+        t(4),
+        toDouble(t(5)).getOrElse(0.0),
+        t(6),
+        toDouble(t(7)).getOrElse(0.0),
+        t(8),
+        t(9),
+        toInt(t(10)).getOrElse(0),
+        t(11),
+        toDouble(t(12)).getOrElse(0.0),
+        toDouble(t(13)).getOrElse(0.0),
+        toDouble(t(14)).getOrElse(0.0),
+        toDouble(t(15)).getOrElse(0.0),
+        toInt(t(16)).getOrElse(0),
+        toDouble(t(17)).getOrElse(0.0),
+        toDouble(t(18)).getOrElse(0.0),
+        toInt(t(19)).getOrElse(0),
+        toDouble(t(20)).getOrElse(0.0),
+        t(21),
+        t(22),
+        toInt(t(23)).getOrElse(0),
+        toDouble(t(24)).getOrElse(0.0),
+        t(25),
+        toDouble(t(26)).getOrElse(0.0),
+        toInt(t(27)).getOrElse(0),
+        toInt(t(28)).getOrElse(0),
+        toDouble(t(29)).getOrElse(0.0),
+        t(30),
+        t(31),
+        toInt(t(32)).getOrElse(0),
+        toInt(t(33)).getOrElse(0)
+      )
+      Some(track) // return track
+    }
   }
 
-  def processTrackLine(t: String) : Track =
+  /**
+   * parses an Int from a string safely
+   * @param s
+   * @return
+   */
+  def toInt(s: String):Option[Int] = { try {
+    Some(s.toInt) } catch {
+    case e: NumberFormatException => None }
+  }
+
+  /**
+   * parses a Double from a string safely
+   * @param s
+   * @return
+   */
+  def toDouble(s: String):Option[Double] = { try {
+    Some(s.toDouble) } catch {
+    case e: NumberFormatException => None }
+  }
+
+  /**
+   * Parses a line from MSD CSV data files into a Track instance
+   * @param t
+   * @return
+   */
+  def createTrack(t: String) : Option[Track] =
   {
-    // val components = t.split(",")
-    val components = t.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1)
+    val components = t.split( ",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1)
+    //val components = t.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1)
+
     val cleaned = components.map(s => s.replaceAll("\"",""))
     Track(cleaned)
+    // TODO - discuss handling bad data - do we filter for None in collections or just create Dummy Tracks with certain key features that can be filtered?
+
   }
 }
