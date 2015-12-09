@@ -76,13 +76,18 @@ class Track (val sampleRate : Int,
              val timeSignature : Int,
              val timeSignatureConfidence : Double,
              val title : String,
-             val trackId : String,
-             val track7Id : Int,
+             val trackId : Int,
+             val track7Id : String,
              val year : Int)
 {
 
   override def toString():String =
     "Artist:\t"+this.artistName+"\nSongTitle:\t"+this.title
+  
+    
+  def musicFeatureSet(): Vector[Double]  = ???
+    
+    
 }
 
 
@@ -132,8 +137,8 @@ object Track {
         toInt(t(28)).getOrElse(0),
         toDouble(t(29)).getOrElse(0.0),
         t(30),
-        t(31),
-        toInt(t(32)).getOrElse(0),
+        toInt(t(31)).getOrElse(0),
+        t(32),
         toInt(t(33)).getOrElse(0)
       )
       Some(track) // return track

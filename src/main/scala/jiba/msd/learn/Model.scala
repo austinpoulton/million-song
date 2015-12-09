@@ -5,7 +5,7 @@ package jiba.msd.learn
  */
 trait Model {
 
-  def train()
+  def fit()
   def predict()
 
 
