@@ -11,5 +11,5 @@ resolvers ++= Seq(
     "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 )
 
-libraryDependencies ++= Dependencies.sparkDeps
+libraryDependencies ++= Dependencies.projectDeps
 //libraryDependencies += "org.apache.spark" % "spark-core_2.10" % "1.0.0-cdh5.1.0"

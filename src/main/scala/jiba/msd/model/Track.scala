@@ -83,7 +83,6 @@ class Track (val sampleRate : Int,
 
   override def toString():String =
     "Artist:\t"+this.artistName+"\nSongTitle:\t"+this.title
-  
     
   def musicFeatureSet(): Vector[Double]  = ???
     
