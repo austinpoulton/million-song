@@ -3,7 +3,6 @@ package jiba.msd.analysis
 import jiba.msd.model.Track
 import org.apache.spark._
 import org.apache.spark.SparkContext._
-//import org.apache.spark.rdd.RDD._
 
 
 /**
@@ -12,8 +11,6 @@ import org.apache.spark.SparkContext._
 object SongCount {
 
   val moon = "hdfs://moonshot-ha-nameservice"
-  val fileNames : Array[String] =  Array("A.csv", "B.csv", "C.csv"  )
-  //val fileSizes : Map[String,Long]
 
   def main(args: Array[String]): Unit = {
     val sc = new SparkContext(new SparkConf().setAppName("Artist song count"))
@@ -22,7 +19,6 @@ object SongCount {
     val username = System.getProperties().get("user.name")
     val outdir = moon + "/user/" + username + "/msd"
 
-    // val lines = sc.textFile(moon + "/data/millionsong/A.csv")
     val lines = sc.textFile(moon + args(0))
     val tracks  = lines.map(line => Track.createTrack(line))
     val artistSongCounts = tracks.filter(to => to != None).map(t => (t.get.artistName, 1)).reduceByKey((v1, v2) => v1 + v2)

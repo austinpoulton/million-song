@@ -5,3 +5,12 @@ This project is sbt and maven enabled.  Your local environment will need a ivy o
 On the EECS infrastructure, maven builds *should* work.
 
 Please refer to the msd.xlsx for field definitions for the msd data.
+
+
+We rely on the following libraries
+* Scala NLP Breeze for matrix and vector operations (Spark ML relies on this for its matrix operations)
+*
+
+
+
+

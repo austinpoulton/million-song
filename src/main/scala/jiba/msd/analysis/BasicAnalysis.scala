@@ -11,12 +11,7 @@ import org.apache.spark._
  */
 
 
-
-
 object BasicAnalysis {
-
-  val fileNames : Array[String] =  Array("A.csv", "B.csv", "C.csv"  )
-  //val fileSizes : Map[String,Long]
 
   def main(args: Array[String]): Unit = {
 

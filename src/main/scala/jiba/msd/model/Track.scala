@@ -37,8 +37,8 @@ package jiba.msd.model
  * @param songHotness     algo est.
  * @param songId
  * @param startOfFadeOut
- * @param tempo           est. bpm
- * @param timeSignature   est. # of beats per bar
+ * @param tempo           est. bpm - speed
+ * @param timeSignature   est. # of beats per bar - rhythm
  * @param timeSignatureConfidence
  * @param title
  * @param trackId
@@ -80,6 +80,13 @@ class Track (val sampleRate : Int,
              val track7Id : String,
              val year : Int)
 {
+
+  /**
+    * derived feature: fade duration over track duration
+    * @return
+    */
+  def fadeRatio: Double = ((this.duration-this.startOfFadeOut) + (this.danceability - this.endOfFadeIn))/this.duration
+
 
   override def toString():String =
     "Artist:\t"+this.artistName+"\nSongTitle:\t"+this.title

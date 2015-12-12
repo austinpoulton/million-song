@@ -8,7 +8,7 @@ import breeze.linalg.DenseVector
 /**
  * Created by austin on 04/12/2015.
  */
-class LogisticModel(val iterations : Int, val regulariser : Double = 0.0, val numFeatures : Int, val alpha : Double = 0.05) extends Model {
+class LogisticRegression(val iterations : Int, val regulariser : Double = 0.0, val numFeatures : Int, val alpha : Double = 0.05) extends Model {
   
   private var w : DenseVector[Double]  = DenseVector.rand(numFeatures)
   
@@ -23,7 +23,7 @@ class LogisticModel(val iterations : Int, val regulariser : Double = 0.0, val nu
   override def fit(train : List[FeatureSet]): Unit = {
     for (i <- 1 to iterations) {
       val gradient = alpha*train.map(x => sigmoid(w.t*x.featureValues)-x.targetValue*x.featureValues-regulariser*w).reduce(_ + _) 
-      w -= gradient  
+      w -= gradient
     }
   }
   
@@ -37,14 +37,14 @@ class LogisticModel(val iterations : Int, val regulariser : Double = 0.0, val nu
    */
   override def weights(): Array[Double] = w.toArray
   
-  /**
-   * generates random weights
-   */
-  def generateRandomWeights(dim : Int): DenseVector[Double] = {
-     val rgen = new Random()
-     val array = new Array[Double](dim)  
-     new DenseVector(array.map(_ => rgen.nextDouble()))
-  }
+}
+
+
+
+
+class LogisticRegressionModel {
+  
+  
   
   
 }
