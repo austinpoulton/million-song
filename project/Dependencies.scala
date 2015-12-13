@@ -14,7 +14,7 @@ object Library {
 
   val mockitoAll     = "org.mockito"       %  "mockito-all"     % Version.mockito
   val scalaTest      = "org.scalatest"     %% "scalatest"       % Version.scalaTest
-  val sparkCore      = "org.apache.spark"  % "spark-core_2.10"  % Version.sparkCore
+  val sparkCore      = "org.apache.spark"  % "spark-core_2.10"  % Version.sparkCore //% "provided"
   val breezeCore     = "org.scalanlp" %% "breeze" % Version.breeze
   val breezeNative   = "org.scalanlp" %% "breeze-natives" % Version.breeze
   val breezeViz      = "org.scalanlp" %% "breeze-viz" %  Version.breeze

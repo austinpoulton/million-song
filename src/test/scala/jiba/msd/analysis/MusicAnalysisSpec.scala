@@ -4,43 +4,36 @@ import jiba.msd.model.Track
 import org.apache.spark.{SparkConf, SparkContext}
 import org.scalatest.{FunSuite, FunSpec, BeforeAndAfter, FlatSpec}
 
-import scala.io.Source
-
 /**
   * Created by austin on 11/12/2015.
   *
-  * Unit testing pattern for Spark Driver acknowledged to:
-  * http://mkuthan.github.io/blog/2015/03/01/spark-unit-testing/
-  *
   */
-class MusicAnalysisSpec extends FunSuite with BeforeAndAfter {
+class MusicAnalysisSpec extends BaseDriverSpec("Music Analysis Test Driver") {
 
-  val master = "local"
-  val appName = "Music Analysis Test Suite"
-  var sc: SparkContext = _
 
-  /**
-    * Before and after test setup and tear down
-    */
-  before {
-    val conf = new SparkConf().setMaster(master).setAppName(appName)
-    sc = new SparkContext(conf)
+
+  "The music analysis " should "should confirm that there are 2000 tracks in the test data" in {
+    assert(rawTestTrackData().count() == 2000)
+    }
+
+  it should "parse to Track objects and find those with good music features" in {
+    val ma = MusicAnalysis()
+    val tracks = rawTestTrackData.map(l => Track.createTrack(l))
+    println("total tracks: "+tracks.count())
+    val tracksWithQualityMusicFeatures = tracks.filter(to => to != None && ma.qualityMusicFeatures(to.get)).map(to => to.get)
+    println("tracks with quality music features: "+tracksWithQualityMusicFeatures.count() )
+    assert(tracksWithQualityMusicFeatures.count() == 112)
   }
 
-  after {
-    if (sc != null) {
-      sc.stop()
-    }
+  it should "find the correlation between tempo and dancability" in {
+    val ma = MusicAnalysis()
+    val tracks = rawTestTrackData.map(l => Track.createTrack(l))
+    val tracksWithQualityMusicFeatures = tracks.filter(to => to != None && ma.qualityMusicFeatures(to.get) && ma.validSongHotness(to.get)).map(to => to.get)
+    // assert that only 56 tracks out of 2000 match the criteria
+    assert(tracksWithQualityMusicFeatures.count() == 56)
 
-    // load our test data
-  val lines = Source.fromURL(getClass.getResource("TestTracks.csv")).getLines().toList
-  lines.map(l => println(l))
-  val rawTrackData = sc.parallelize(lines)
 
-    test("Test Track raw data should have a size = 100") {
-
-      val tracks = rawTrackData.map(l=>Track.createTrack(l))
-      assert(tracks.count()===100)
-    }
+    val spearCorr = ma.correlation(tracksWithQualityMusicFeatures, ma.tempoHotnessAggregationFunc)
+    println("Spearman correlation for tempo and danceability:  " + spearCorr )
   }
 }

@@ -15,11 +15,13 @@ import scala.math.sqrt
   * @param xxSum
   * @param yySum
   */
-case class SumComp(xSum: Double = 0.0, ySum : Double = 0.0, xySum : Double = 0.0, xxSum : Double = 0.0 , yySum : Double = 0.0, n : Int = 0)
+case class SumComp(xSum: Double = 0.0, ySum : Double = 0.0, xySum : Double = 0.0, xxSum : Double = 0.0 , yySum : Double = 0.0, n : Int = 0) extends Serializable
 {
 
   def +(that: SumComp): SumComp
           = SumComp(this.xSum+that.xSum, this.ySum + that.ySum, this.xySum + that.xySum, this.xxSum + that.xxSum, this.yySum+that.yySum, this.n + that.n)
+
+  override def toString() = "x Sum:\t"+xSum+"\ty Sum:\t"+ySum+"\txy Sum:\t"+xySum+"\tx^2 Sum:\t"+xxSum+"\ty^2 Sum:\t"+yySum+"\tn:\t"+n
 }
 
 /**
@@ -34,7 +36,8 @@ trait Statistics {
   def spearmanCombiner(acc1: SumComp, acc2: SumComp):SumComp =  acc1 + acc2
 
 
-  def spearmanCorrelation(acc: SumComp): Double
-                    = (acc.n * acc.xySum - acc.xSum * acc.ySum) / (sqrt(acc.n * acc.xxSum - pow(acc.xSum,2)) * sqrt(acc.n * acc.yySum - pow(acc.ySum,2)))
-
+  def spearmanCorrelation(acc: SumComp): Double = {
+     println(acc)
+    (acc.n * acc.xySum - acc.xSum * acc.ySum) / (sqrt(acc.n * acc.xxSum - pow(acc.xSum, 2)) * sqrt(acc.n * acc.yySum - pow(acc.ySum, 2)))
+  }
 }

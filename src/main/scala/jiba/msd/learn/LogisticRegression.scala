@@ -1,5 +1,7 @@
 package jiba.msd.learn
 
+import org.apache.spark.rdd.RDD
+
 import scala.math.exp
 import scala.util.Random
 import breeze.linalg.DenseVector
@@ -8,7 +10,7 @@ import breeze.linalg.DenseVector
 /**
  * Created by austin on 04/12/2015.
  */
-class LogisticRegression(val iterations : Int, val regulariser : Double = 0.0, val numFeatures : Int, val alpha : Double = 0.05) extends Model {
+class LogisticRegression(val iterations : Int, val regulariser : Double = 0.0, val numFeatures : Int, val alpha : Double = 0.05)  {
   
   private var w : DenseVector[Double]  = DenseVector.rand(numFeatures)
   
@@ -20,31 +22,33 @@ class LogisticRegression(val iterations : Int, val regulariser : Double = 0.0, v
   /**
    * Train the model/fit to the training data
    */
-  override def fit(train : List[FeatureSet]): Unit = {
+   def fit(train : RDD[LabelledInstance]): Unit = {
     for (i <- 1 to iterations) {
-      val gradient = alpha*train.map(x => sigmoid(w.t*x.featureValues)-x.targetValue*x.featureValues-regulariser*w).reduce(_ + _) 
+      val gradient = alpha*train.map(x => sigmoid(w.t*x.features)-x.target * x.features -regulariser*w).reduce(_ + _)
       w -= gradient
     }
+
+
   }
   
   /**
    * Predict 
    */
-  override def predict(test : List[FeatureSet]): FeatureSet = ???
+   def predict(test : List[LabelledInstance]): LabelledInstance = ???
   
   /** 
    *  returns the weights for the model
    */
-  override def weights(): Array[Double] = w.toArray
+   def weights(): Array[Double] = w.toArray
   
 }
 
 
+class LogisticRegressionModel(val threshold : Double) { //extends RegressionModel {
+  require(threshold >0.0 && threshold < 1.0)
 
 
-class LogisticRegressionModel {
-  
-  
+
   
   
 }
