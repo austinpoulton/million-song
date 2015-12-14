@@ -2,6 +2,9 @@ package jiba.msd.analysis
 
 import jiba.msd.model.Track
 import jiba.msd.stats.{SumComp, Statistics}
+import org.apache.spark.SparkContext
+import org.apache.spark.SparkContext._
+import org.apache.spark.SparkConf
 import org.apache.spark.rdd.RDD
 
 

@@ -17,6 +17,8 @@ project/target
 project/project
 dist
 bin
+# ignore spark data output
+out
 
 # ignore any data folders
 data

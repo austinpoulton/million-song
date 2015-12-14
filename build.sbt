@@ -4,6 +4,8 @@ version := "1.0"
 
 //scalaVersion := "2.11.5"
 
+parallelExecution in Test := false
+
 resolvers ++= Seq(
     "Hadoop Libs" at "https://repository.cloudera.com/content/repositories/releases/",
     "Cloudera Libs" at "https://repository.cloudera.com/artifactory/cloudera-repos/",
