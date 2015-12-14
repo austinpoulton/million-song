@@ -1,5 +1,7 @@
 package jiba.msd.model
 
+import jiba.msd.stats.SumComp
+
 /**
  * Created by austin on 30/11/2015
  * Case class and companion object that represents track data from the
@@ -81,6 +83,9 @@ class Track (val sampleRate : Int,
              val year : Int)
 {
 
+  // song words to filter out
+  final val filterSongWords : Set[String] = Set("a", "the", "you", "he", "she", "me", "i", "they", "yours", "there's")
+
   /**
     * derived feature: fade duration over track duration
     * @return
@@ -88,12 +93,30 @@ class Track (val sampleRate : Int,
   def fadeRatio: Double = ((this.duration-this.startOfFadeOut) + (this.danceability - this.endOfFadeIn))/this.duration
 
 
+
+  //val song= (acc : SumComp,t:  Track) => spearmanAggregator(acc,t.tempo, t.songHotness)
+
+
+    
+  //def musicFeatureSet(): Vector[Double]  = ???
+
+  /**
+    * returns a list of filtered song words  - can be used by flat map to get song words by artists or accross the entire DB
+    * @return
+    */
+  def songWords(): List[(String, Int)] =  {
+    val songTitleLower = this.title.toLowerCase
+    val words = songTitleLower.split(" ")
+    val filteredWords = (for (w <- words if !filterSongWords.contains(w)) yield (w, 1)).toList
+    filteredWords
+  }
+
+
+  def playmeIdPresent():Int = if (artistPlaymeId < 0) 0 else 1
+
+
   override def toString():String =
     "Artist:\t"+this.artistName+"\nSongTitle:\t"+this.title
-    
-  def musicFeatureSet(): Vector[Double]  = ???
-    
-    
 }
 
 

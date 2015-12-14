@@ -1,5 +1,6 @@
 package jiba.msd.learn
 
+import breeze.linalg.DenseVector
 import org.apache.spark.rdd.RDD
 
 /**
@@ -12,19 +13,21 @@ trait RegressionModel {
     * @param testFeatures
     * @return
     */
-  def predict(testFeatures : Vector[Double]): Double
+  def predict(testFeatures : LabelledInstance): (Double, Double)
 
   /** predicitons for a set of instances
     *
     * @param testInstances
     * @return
     */
-  def predict(testInstances : RDD[Vector[Double]]) : RDD[Double]
-
+  def predict(testInstances : RDD[LabelledInstance]) : RDD[(Double, Double)]
 
   /**
     * get the model weights
     * @return
     */
-  def weights() : Vector[Double]
+  def weights() : DenseVector[Double]
+
 }
+
+
