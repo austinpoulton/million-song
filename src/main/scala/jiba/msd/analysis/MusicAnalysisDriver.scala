@@ -2,9 +2,6 @@ package jiba.msd.analysis
 
 import jiba.msd.model.Track
 import jiba.msd.stats.{SumComp, Statistics}
-import org.apache.spark.SparkContext
-import org.apache.spark.SparkContext._
-import org.apache.spark.SparkConf
 import org.apache.spark.rdd.RDD
 
 
@@ -12,11 +9,6 @@ import org.apache.spark.rdd.RDD
   * Music analysis class
   */
 class MusicAnalysis extends Statistics with Serializable {
-
-  def tracksWithQualityMusicFeatures(rawTracks : RDD[String]): RDD[Track] = {
-    val tracks = rawTracks.map(l => Track.createTrack(l))
-    tracks.filter(to => to != None && this.qualityMusicFeatures(to.get)).map(to => to.get)
-  }
 
   def correlation(tracks : RDD[Track], aggFunc : (SumComp,Track)=> SumComp ) : Double = {
     val zeros = SumComp()  // zero sums
@@ -28,6 +20,8 @@ class MusicAnalysis extends Statistics with Serializable {
   // function variables
   val combinerFunc = (acc1: SumComp, acc2: SumComp) => spearmanCombiner(acc1, acc2)
   val tempoHotnessAggregationFunc = (acc : SumComp,t:  Track) => spearmanAggregator(acc,t.tempo, t.songHotness)
+  val yearHotnessAggregationFunc = (acc : SumComp,t:  Track) => spearmanAggregator(acc,t.year, t.songHotness)
+ 
 
   /**
     * predicate to identify Tracks with quality musical features
@@ -37,6 +31,9 @@ class MusicAnalysis extends Statistics with Serializable {
   def qualityMusicFeatures(t : Track ) : Boolean =
     (t.modeConfidence > 0.6 && t.mode > 0 && t.keyConfidence > 0.6 && t.key > 0 && t.timeSignatureConfidence > 0.6 && t.timeSignature >0)
 
+  def goodYearAndHotness(t : Track ) : Boolean =
+    (t.year > 0 && t.songHotness > 0)
+    
   def validSongHotness(t: Track) : Boolean = t.songHotness > 0
 }
 
@@ -53,12 +50,21 @@ object MusicAnalysisDriver extends BaseDriver("Music Analysis Driver")   {
     val ma =  MusicAnalysis()
     // val lines = sparkCtx.textFile(sparkClusterURL+dataFile)
     // marshall the raw csv data into Option[Track] objects. tracks is a RDD[Option[Track]]
-    val tracks = rawTrackData.map(l => Track.createTrack(l))
+    
+    val tracks = if (args(0).isEmpty()) {rawTrackData.map(l => Track.createTrack(l))} else {rawData(args(0)).map(l => Track.createTrack(l))}
+    val time1 = System.currentTimeMillis
+    
     // filter for Option[Track] = Some and quality musical features.  tracksWithQualityFeatures is a RDD[Track]
     val tracksWithQualityMusicFeatures = tracks.filter(to => to != None && ma.qualityMusicFeatures(to.get) && ma.validSongHotness(to.get)).map(to => to.get)
-
-    // find correlation of tempo and danceability
+     
+    // find correlation of tempo and hotness
     val tempoHotnessCorr = ma.correlation(tracksWithQualityMusicFeatures,ma.tempoHotnessAggregationFunc)
-    println ("#DancingDads : Spearman correlation, r(tempo, hotness) = " + tempoHotnessCorr)
+    val time_taken = System.currentTimeMillis - time1
+    println ("#DancingDads : Spearman correlation, r(tempo, hotness) = " + tempoHotnessCorr + " in " + time_taken + " milliseconds")
+    // find correlation between year and song hotness
+    val tracksWithGoodYearAndHotness = tracks.filter(to => to != None && ma.goodYearAndHotness(to.get)).map(to => to.get)
+    val yearHotnessCorr = ma.correlation(tracksWithGoodYearAndHotness,ma.yearHotnessAggregationFunc)
+    println ("#DancingDads : Spearman correlation, r(year, hotness) = " + yearHotnessCorr)
+    
   }
 }
