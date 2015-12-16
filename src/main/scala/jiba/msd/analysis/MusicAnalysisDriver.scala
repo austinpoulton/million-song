@@ -21,6 +21,7 @@ class MusicAnalysis extends Statistics with Serializable {
   val combinerFunc = (acc1: SumComp, acc2: SumComp) => spearmanCombiner(acc1, acc2)
   val tempoHotnessAggregationFunc = (acc : SumComp,t:  Track) => spearmanAggregator(acc,t.tempo, t.songHotness)
   val yearHotnessAggregationFunc = (acc : SumComp,t:  Track) => spearmanAggregator(acc,t.year, t.songHotness)
+  val familiarityHotnessAggregationFunc = (acc : SumComp,t:  Track) => spearmanAggregator(acc,t.artistFamiliarity, t.songHotness)
  
 
   /**
@@ -33,6 +34,9 @@ class MusicAnalysis extends Statistics with Serializable {
 
   def goodYearAndHotness(t : Track ) : Boolean =
     (t.year > 0 && t.songHotness > 0)
+    
+   def goodFamiliarityAndHotness(t : Track ) : Boolean =
+    (t.artistFamiliarity > 0 && t.songHotness > 0)
     
   def validSongHotness(t: Track) : Boolean = t.songHotness > 0
 }
@@ -65,6 +69,11 @@ object MusicAnalysisDriver extends BaseDriver("Music Analysis Driver")   {
     val tracksWithGoodYearAndHotness = tracks.filter(to => to != None && ma.goodYearAndHotness(to.get)).map(to => to.get)
     val yearHotnessCorr = ma.correlation(tracksWithGoodYearAndHotness,ma.yearHotnessAggregationFunc)
     println ("#DancingDads : Spearman correlation, r(year, hotness) = " + yearHotnessCorr)
+    
+    // find correlation between artist familiarity and song hotness
+    val tracksWithGoodFamiliarityAndHotness = tracks.filter(to => to != None && ma.goodFamiliarityAndHotness(to.get)).map(to => to.get)
+    val familiarityHotnessCorr = ma.correlation(tracksWithGoodFamiliarityAndHotness,ma.familiarityHotnessAggregationFunc)
+    println ("#DancingDads : Spearman correlation, r(familiarity, hotness) = " + familiarityHotnessCorr)
     
   }
 }
