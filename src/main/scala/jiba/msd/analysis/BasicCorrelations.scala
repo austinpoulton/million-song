@@ -24,6 +24,7 @@ object BasicCorrelations {
     // map to track features
     
     val tracks  = csvlines.map(track => Track.createTrack(track))
+    val time1 = System.currentTimeMillis
     val total_tracks = tracks.count()
     println ("#DancingDads : mapped features of " + total_tracks + " tracks from " + moon + args(0))
     
@@ -62,8 +63,8 @@ object BasicCorrelations {
     val denominator = sqrt((n*sum_xsqrd) - pow(sum_x,2)) *
                       sqrt((n*sum_ysqrd) - pow(sum_y,2))
     val corr = numerator / denominator
-    
-    println ("#DancingDads : Spearman correlation of Song Hotness to Temp is " + corr)
+    val time_taken = System.currentTimeMillis - time1
+    println ("#DancingDads : Spearman correlation of Song Hotness to Temp is " + corr + " in " + time_taken + " milliseconds")
     if (corr >= 0.5 ) println ("#DancingDads : ...which implies a reasonable, positive correlation")
     else if (corr <= -0.5) println ("#DancingDads : ...which implies a reasonable, negative correlation")
     else if ((abs(corr) < 0.5) & (abs(corr) >= 0.1)) println ("#DancingDads : ...which implies a weak correlation")
