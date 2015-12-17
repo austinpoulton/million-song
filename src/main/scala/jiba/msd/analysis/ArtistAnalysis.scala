@@ -39,15 +39,15 @@ object ArtistAnalysisDriver extends BaseDriver("Artist Analysis Driver") {
 
     // artist is an RDD[(Int, Artist)]
     val allArtists = tracksWithArtistFeatures.map(t => (t.artist7Id, Artist(t))).reduceByKey((v1, v2)=> v1 +v2)
-    val artists = allArtists.sample(false,0.2)
+    val artists = allArtists.sample(false,0.01)
 
 
     // split training and test data 60/40 % on our test 592 artists
     val splits = artists.randomSplit(Array(0.6, 0.4))
     val trArtists = splits(0)
     val teArtists = splits(1)
-    println("Training size >>>> "+trArtists.count())
-    println("Test size >>>> "+teArtists.count())
+    val trArtistCount = trArtists.count()
+    val teArtistCount = teArtists.count()
 
     // get an RDD which we can train on RDD[LabelledInstance]
     val training = trArtists.map( t => t._2.labelledInstanceForArtistHotness())
@@ -60,7 +60,11 @@ object ArtistAnalysisDriver extends BaseDriver("Artist Analysis Driver") {
 
     val predictions = lrModel.predict(testing)
     val error = predictions.map(res => pow((res._1-res._2),2)).reduce(_+_)
-    println("Prediction error = "+ error)
+
+    println("#DancingDads: Training size >>>> "+trArtistCount)
+    println("#DancingDads: Test size >>>> "+teArtistCount)
+
+    println("#DancingDads:  Prediction error = "+ error)
 
    // val artistSongCounts = tracks.filter(to => to != None).map(t => (t.get.artistName, 1)).reduceByKey((v1, v2) => v1 + v2)
 
