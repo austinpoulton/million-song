@@ -57,7 +57,7 @@ class ArtistAnalysisSpec extends BaseDriverSpec("Artist Analysis Spec") with Ser
 
     val predictions = lrModel.predict(testing)
     val error = predictions.map(res => pow((res._1-res._2),2)).reduce(_+_)
-    println("Prediction error = "+ error)
+    println("Prediction error: = "+ error)
 
     // setup the linear regressor trainer
 //    val algorithm = new LinearRegressionWithSGD()

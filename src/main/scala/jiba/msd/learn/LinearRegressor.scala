@@ -15,10 +15,18 @@ import org.apache.spark.rdd.RDD
   */
 class LinearRegressor(val iterations : Int=100, val regulariser : Double = 0.1, val gradientRate : Double = 0.02) extends Serializable{
 
+  def addBias(x : DenseVector[Double] ): DenseVector[Double] = {
+     val features = x.toArray
+     val bias = Array(1.0)
+     DenseVector(Array.concat(bias,features))
+  }
+
+
+
   def fit(train: RDD[LabelledInstance], numFeatures : Int): LinearRegressionModel = {
-    var w : DenseVector[Double]  = DenseVector.rand(numFeatures)
+    var w : DenseVector[Double]  = DenseVector.rand(numFeatures + 1)  // adding the bias coefficient as +1
     for (i <- 1 to iterations) {
-      val gradient = gradientRate * (train.map(x => (x.target-(w.t * x.features)) * x.features - regulariser * w).reduce(_ + _))
+      val gradient = gradientRate * (train.map(x => (x.target-(w.t * addBias(x.features))) * x.features - regulariser * w).reduce(_ + _))
       w = w + gradient
     }
     LinearRegressionModel(w)  // return a LinearRegressionModel with trained weights
