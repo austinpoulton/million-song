@@ -13,6 +13,7 @@ import org.apache.spark.rdd.RDD
   * @param regulariser L2 regulariser
   * @param gradientRate the rate for gradient descent  (alpha)
   */
+
 class LinearRegressor(val iterations : Int=100, val regulariser : Double = 0.0, val gradientRate : Double = 0.0001) extends Serializable{
 
   // adds the bias to a feature vector withBias = [1.0 features]
