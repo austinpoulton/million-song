@@ -1,11 +1,30 @@
 package jiba.msd.learn
 
 import breeze.linalg.DenseVector
+import breeze.numerics._
 import org.apache.spark.rdd.RDD
 
 /**
  * Created by austin on 04/12/2015.
  */
+
+object Regressor {
+
+
+  def withBias(x : DenseVector[Double] ): DenseVector[Double] = {
+    val features = x.toArray
+    val bias = Array(1.0)
+    DenseVector(Array.concat(bias,features))
+  }
+
+  def sse(predictionsAndActuals : RDD[Tuple2[Double, Double]]): Double = predictionsAndActuals.map(res => pow((res._1-res._2),2)).reduce(_+_)
+
+  def mse(predictionsAndActuals : RDD[Tuple2[Double, Double]]) : Double = sse(predictionsAndActuals)/predictionsAndActuals.count()
+
+
+}
+
+
 trait RegressionModel {
 
   /**

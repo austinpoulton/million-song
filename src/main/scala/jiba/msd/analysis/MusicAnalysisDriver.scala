@@ -19,10 +19,12 @@ class MusicAnalysis extends Statistics with Serializable {
 
   // function variables
   val combinerFunc = (acc1: SumComp, acc2: SumComp) => spearmanCombiner(acc1, acc2)
+  // aggregation functions for correlation analysis
   val tempoHotnessAggregationFunc = (acc : SumComp,t:  Track) => spearmanAggregator(acc,t.tempo, t.songHotness)
   val yearHotnessAggregationFunc = (acc : SumComp,t:  Track) => spearmanAggregator(acc,t.year, t.songHotness)
   val familiarityHotnessAggregationFunc = (acc : SumComp,t:  Track) => spearmanAggregator(acc,t.artistFamiliarity, t.songHotness)
- 
+  val loudnessTempoAggregationFunc =  (acc : SumComp,t:  Track) => spearmanAggregator(acc,t.loudness, t.tempo)
+  val keyHotnessAggregationFunc =  (acc : SumComp,t:  Track) => spearmanAggregator(acc,t.key, t.songHotness)
 
   /**
     * predicate to identify Tracks with quality musical features
@@ -30,7 +32,7 @@ class MusicAnalysis extends Statistics with Serializable {
     * @return true if the track contains features with sufficient confidence
     */
   def qualityMusicFeatures(t : Track ) : Boolean =
-    (t.modeConfidence > 0.6 && t.mode > 0 && t.keyConfidence > 0.6 && t.key > 0 && t.timeSignatureConfidence > 0.6 && t.timeSignature >0)
+    (t.modeConfidence > 0.6 && t.mode > 0 && t.keyConfidence > 0.6 && t.key > 0 && t.timeSignatureConfidence > 0.6 && t.timeSignature >0 && t.key > 0)
 
   def goodYearAndHotness(t : Track ) : Boolean =
     (t.year > 0 && t.songHotness > 0)

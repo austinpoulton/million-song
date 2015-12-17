@@ -1,7 +1,7 @@
 package jiba.msd.analysis
 
 import breeze.numerics.pow
-import jiba.msd.learn.LinearRegressor
+import jiba.msd.learn.{Regressor, LinearRegressor}
 import jiba.msd.model.{Artist, Track}
 import org.apache.spark.SparkContext._
 
@@ -56,7 +56,7 @@ class ArtistAnalysisSpec extends BaseDriverSpec("Artist Analysis Spec") with Ser
     println(lrModel)
 
     val predictions = lrModel.predict(testing)
-    val error = predictions.map(res => pow((res._1-res._2),2)).reduce(_+_)
+    val error = Regressor.sse(predictions)
     println("Prediction error: = "+ error)
 
     // setup the linear regressor trainer

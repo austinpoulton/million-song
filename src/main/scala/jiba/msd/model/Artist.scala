@@ -38,6 +38,7 @@ class Artist(val id  :  Int,  //artist7id
     */
   def labelledInstanceForArtistHotness() : LabelledInstance = {
      val features : DenseVector[Double] = new DenseVector(Array(familiarity, totalSongHotness, totalTracks))
+     //val features : DenseVector[Double] = new DenseVector(Array(familiarity))
      LabelledInstance(this.hotness, features)
   }
 }
