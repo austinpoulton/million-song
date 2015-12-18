@@ -1,7 +1,5 @@
 package jiba.msd.analysis
 
-import breeze.numerics._
-import jiba.msd.analysis.MusicAnalysisDriver._
 import jiba.msd.learn.{Regressor, LinearRegressor, LabelledInstance}
 import jiba.msd.model.{Artist, Track}
 import jiba.msd.stats.{SumComp, Statistics}
@@ -13,6 +11,9 @@ import org.apache.spark.SparkContext._
 class ArtistAnalysis extends Statistics with Serializable {
 
   def hasQualityArtistFeatures(t : Track ) : Boolean = t.songHotness > 0 && t.artistHotness > 0 && t.year > 1950 && t.artistFamiliarity > 0
+
+
+
 
 
 
