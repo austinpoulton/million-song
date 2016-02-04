@@ -13,12 +13,6 @@ class ArtistAnalysis extends Statistics with Serializable {
   def hasQualityArtistFeatures(t : Track ) : Boolean = t.songHotness > 0 && t.artistHotness > 0 && t.year > 1950 && t.artistFamiliarity > 0
 
 
-
-
-
-
-
-
 }
 
 object ArtistAnalysis extends Serializable {
@@ -67,17 +61,6 @@ object ArtistAnalysisDriver extends BaseDriver("Artist Analysis Driver") {
 
     println("#DancingDads:  Prediction error = "+ error)
 
-   // val artistSongCounts = tracks.filter(to => to != None).map(t => (t.get.artistName, 1)).reduceByKey((v1, v2) => v1 + v2)
-
-
-
-
-    // filter for Option[Track] = Some and quality musical features.  tracksWithQualityFeatures is a RDD[Track]
-   //al tracksWithQualityMusicFeatures = tracks.filter(to => to != None && ma.qualityMusicFeatures(to.get) && ma.validSongHotness(to.get)).map(to => to.get)
-
-    // find correlation of tempo and danceability
-   // val tempoHotnessCorr = ma.correlation(tracksWithQualityMusicFeatures,ma.tempoHotnessAggregationFunc)
-   // println ("#DancingDads : Spearman correlation, r(tempo, hotness) = " + tempoHotnessCorr)
   }
 
 }

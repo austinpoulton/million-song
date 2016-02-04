@@ -25,7 +25,6 @@ class MusicAnalysis extends Statistics with Serializable {
   val yearHotnessAggregationFunc = (acc : SumComp,t:  Track) => spearmanAggregator(acc,t.year, t.songHotness)
   val yearFamiliarityAggregationFunc = (acc : SumComp,t:  Track) => spearmanAggregator(acc,t.year, t.artistFamiliarity)
   val familiarityHotnessAggregationFunc = (acc : SumComp,t:  Track) => spearmanAggregator(acc,t.artistFamiliarity, t.songHotness)
- 
 
   /**
     * predicate to identify Tracks with quality musical features
@@ -52,7 +51,6 @@ object MusicAnalysis {
 
   def apply() : MusicAnalysis = new MusicAnalysis
 }
-
 
 
 object MusicAnalysisDriver extends BaseDriver("Music Analysis Driver")   {

@@ -77,7 +77,7 @@ object HeatMap {
         binplot(y)(x) = valid_x_y.filter(xy => (xy._1 == y*15)).filter(xy => (xy._2*10.toInt == x)).count().toInt
         }
     }
-      
+
    
     //5. Print matrix and summary values       
     
@@ -90,8 +90,6 @@ object HeatMap {
     println("Valid_x_y rdd count " + valid_x_y_count)
     println("Hotness range " + hot_min + " to " + hot_max)
     println("Tempo range " + tempo_min + " to " + tempo_max)
- 
- 
-      
+
   }
 }
